@@ -1,0 +1,82 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "default_agent": "orchestrator",
+
+  "agent": {
+    "orchestrator": {
+      "description": "Main coordinator: analyzes requests, selects workflow, delegates to sub-agents, ensures documentation",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.08,
+      "mode": "primary",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      }
+    },
+
+    "architect": {
+      "description": "Evaluates architecture impact and module boundaries",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.07,
+      "mode": "subagent",
+      "tools": { "write": false, "edit": false, "bash": false }
+    },
+
+    "planner": {
+      "description": "Creates detailed, incremental implementation plans",
+      "model": "anthropic/claude-haiku-4",
+      "temperature": 0.12,
+      "mode": "subagent",
+      "tools": { "write": false, "edit": false, "bash": false }
+    },
+
+    "coder": {
+      "description": "Implements features, fixes and refactors code",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.18,
+      "tools": { "write": true, "edit": true, "bash": true }
+    },
+
+    "reviewer": {
+      "description": "Performs strict code review",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.05,
+      "mode": "subagent",
+      "tools": { "write": false, "edit": false, "bash": false }
+    },
+
+    "tester": {
+      "description": "Writes and fixes unit/integration tests",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.12,
+      "mode": "subagent",
+      "tools": { "write": true, "edit": true, "bash": true }
+    },
+
+    "security": {
+      "description": "Scans for security vulnerabilities and bad practices",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.05,
+      "mode": "subagent",
+      "tools": { "write": false, "edit": false, "bash": false }
+    },
+
+    "refactor": {
+      "description": "Improves code structure without changing behavior",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.12,
+      "mode": "subagent",
+      "tools": { "write": true, "edit": true, "bash": false }
+    },
+
+    "docs": {
+      "description": "Creates and maintains documentation (JSDoc, README, ADR, diagrams)",
+      "model": "anthropic/claude-sonnet-4",
+      "temperature": 0.10,
+      "mode": "subagent",
+      "tools": { "write": true, "edit": true, "bash": false }
+    }
+  }
+}
