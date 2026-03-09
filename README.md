@@ -27,8 +27,8 @@ To start using this template for your project:
 1. **Clone or copy** this template repository to your local machine
 2. **Customize AGENTS.md** — Fill in the PROJECT CONTEXT block (lines 78-120) with your specific project details
 3. **Configure agents** — Review and modify agent definitions in `.opencode/agents/` as needed
-4. **Set up your project** — Initialize your actual project code in the appropriate directories
-5. **Run OpenCode** — Start using OpenCode with this configuration to develop your project
+4. **Set up your project** — Insert the technical requirements of your project into project.md
+5. **Run OpenCode** — Start developing your project by specifying OpenCode by reading project.md and the beginning of programming
 
 No additional installation is required beyond having OpenCode properly installed. The agent configuration is automatically loaded from the `.opencode/` directory.
 

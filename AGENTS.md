@@ -118,3 +118,14 @@ src/
 - Error handling: ...
 - Tests: ...
 - Comments / documentation: ...
+
+---
+
+## Memory and Context
+
+- All agents must read **DECISIONS.md** and **RUN_CONTEXT.md** files
+- **DECISIONS.md** — permanent project decisions (created by Architect, updated by Orchestrator)
+- **RUN_CONTEXT.md** — current task context (managed by Orchestrator)
+- Decisions in DECISIONS.md take priority over everything else
+
+These files help maintain consistency across task sessions and prevent conflicting decisions.
