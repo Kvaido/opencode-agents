@@ -8,15 +8,14 @@ This project serves as a **template** for implementing the OpenCode Multi-Agent 
 
 The system simulates a realistic small development team with specialized agents, each having distinct responsibilities:
 
+- **Orchestrator** — coordinates the process and decides execution order
 - **Architect** — ensures long-term structural sustainability
 - **Planner** — breaks tasks into clear, understandable steps
 - **Coder** — writes and modifies code
 - **Reviewer** — checks code quality and architectural fit
 - **Tester** — adds and fixes tests
 - **Security** — looks for vulnerabilities
-- **Refactor** — improves readability and structure
 - **Docs** — maintains documentation
-- **Orchestrator** — coordinates the process and decides execution order
 
 The orchestrator acts as the team lead, analyzing user requests and delegating tasks to the appropriate agents in the correct sequence.
 
