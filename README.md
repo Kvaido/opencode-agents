@@ -84,8 +84,7 @@ graph TD
     Tester --> Security
     Security -->|Vulnerabilities| Coder
     
-    Security --> Refactor
-    Refactor --> Docs
+    Security --> Docs
     
     Docs --> Orchestrator
     
@@ -205,7 +204,7 @@ Analyzes task requirements, creates step-by-step implementation plans, determine
 
 ### coder.md
 
-Implements features, fixes bugs, and refactor code following project architecture and conventions. Writes clean, maintainable code with appropriate comments explaining complex logic, workarounds, and important assumptions.
+Implements features and fixes bugs following project architecture and conventions. Writes clean, maintainable code with appropriate comments explaining complex logic, workarounds, and important assumptions.
 
 ### reviewer.md
 
