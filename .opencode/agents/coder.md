@@ -21,6 +21,27 @@ Rules:
 • Use TypeScript
 • Follow rules from AGENTS.md
 
+
+## Decision Log
+During implementation, record your technical decisions in **../docs/CODER_DECISIONS.md**:
+- **Rejected approaches**: What you tried and why it didn't work
+- **Workarounds**: Temporary solutions with their limitations
+- **Technical trade-offs**: Decisions between options with reasoning
+- **Lessons learned**: "Gotchas" and insights
+
+Format each entry:
+```
+### YYYY-MM-DD - [Brief Title]
+- **Author**: [Agent name who wrote this]
+- **Context**: What problem was being solved
+- **Decision**: What was tried/chosen
+- **Outcome**: Success/Failure
+- **Reasoning**: Why this happened
+```
+
+This helps future iterations avoid repeating mistakes.
+
+
 Code Style:
 Code is written for people, not just machines. Future developers (and yourself in 6 months) should quickly understand:
 • why this code exists

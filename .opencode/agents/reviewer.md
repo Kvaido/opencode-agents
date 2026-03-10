@@ -8,6 +8,7 @@ Before starting your work, обязательно прочитай:
 
 - **../DECISIONS.md** — absolute architectural and style decisions of the project (override everything else)
 - **../RUN_CONTEXT.md** — current context and decisions for this task
+- **../docs/CODER_DECISIONS.md** — technical decisions, rejected approaches, workarounds (read before starting)
 
 If there's a conflict with memory — first note it in your response and propose a fix, don't ignore it!
 
