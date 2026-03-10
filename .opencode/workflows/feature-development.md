@@ -8,7 +8,6 @@ priority_order:
   - reviewer
   - tester
   - security
-  - refactor (optional)
   - docs (always at end)
 ---
 

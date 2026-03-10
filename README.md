@@ -66,6 +66,48 @@ This section defines the technology stack used in your project. Each field shoul
 - CI/CD / deployment: GitHub Actions, Vercel
 ```
 
+## Workflow
+
+```mermaid
+graph TD
+    User[User / project.md] --> Orchestrator
+    
+    Orchestrator --> Architect
+    Architect -->|DECISIONS.md| Planner
+    
+    Planner -->|RUN_CONTEXT.md| Coder
+    Coder -->|CODE| Reviewer
+    
+    Reviewer -->|OK| Tester
+    Reviewer -->|Issues| Coder
+    
+    Tester --> Security
+    Security -->|Vulnerabilities| Coder
+    
+    Security --> Refactor
+    Refactor --> Docs
+    
+    Docs --> Orchestrator
+    
+    Orchestrator -->|New Cycle| User
+```
+
+### Workflow Types
+
+| Task Type | Workflow |
+|-----------|----------|
+| New Feature | architect → planner → coder → reviewer → tester → security → docs |
+| Bugfix | planner → coder → tester → reviewer → security → docs |
+
+### Memory Files
+
+- **DECISIONS.md** - Permanent architectural decisions
+- **RUN_CONTEXT.md** - Current task context
+- **CODER_DECISIONS.md** - Technical decisions and workarounds
+
+See `docs/examples/` for workflow examples.
+
+
 ### Architecture and Key Principles
 
 This section contains 5-10 critical rules that all agents must follow when working on your project. These principles guide architectural decisions and ensure consistency across the codebase.
@@ -177,10 +219,6 @@ Writes unit and integration tests, fixes existing tests, and checks code test co
 
 Scans for vulnerabilities, checks input data security, analyzes authentication and authorization, and ensures protection against common vulnerabilities (SQL injection, XSS, CSRF). Ensures secrets are never stored in code.
 
-### refactor.md
-
-Improves code structure without changing behavior, eliminates duplication, optimizes performance, and simplifies complex code. Makes small, safe changes following SOLID principles.
-
 ### docs.md
 
 Writes and updates JSDoc for public functions, types, and tRPC procedures. Creates README files for features, writes Architectural Decision Records (ADRs), generates Mermaid diagrams, and maintains CHANGELOG.md.
@@ -196,7 +234,7 @@ The orchestrator manages different workflows based on the type of task:
 ### New Feature / Major Change
 
 ```
-architect → planner → coder → reviewer → tester → security → refactor (optional) → docs
+architect → planner → coder → reviewer → tester → security → docs
 ```
 
 Used for implementing significant new functionality that requires architectural planning.
@@ -208,14 +246,6 @@ planner → coder → tester → reviewer → security → docs
 ```
 
 Used for fixing bugs, typically starting with planning the fix, implementing it, testing, and reviewing.
-
-### Refactoring / Code Improvement
-
-```
-planner → coder → refactor → reviewer → tester → docs
-```
-
-Used for improving code structure, eliminating duplication, or optimizing performance without changing behavior.
 
 ### Documentation Only / ADR
 

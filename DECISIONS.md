@@ -5,9 +5,6 @@ architect → planner → coder → reviewer → tester → security → docs
 
 Bugfix:
 planner → coder → tester → reviewer → security → docs
-
-Refactoring:
-planner → coder → refactor → reviewer → tester → docs
 ```
 
 ### Agent Responsibilities
@@ -23,7 +20,7 @@ planner → coder → refactor → reviewer → tester → docs
 
 ### Coder Decision Log
 - **File**: `docs/CODER_DECISIONS.md`
-- **Who Writes**: Coder (primarily), Refactor (if finding workarounds)
+- **Who Writes**: Coder
 - **Who Reads**: All agents before starting work (in addition to DECISIONS.md/RUN_CONTEXT.md)
 - **Purpose**: Technical decisions, rejected approaches, workarounds, lessons learned
 - **What to record**:
@@ -38,7 +35,7 @@ planner → coder → refactor → reviewer → tester → docs
 1. **General agent is NOT ALLOWED for development** - Only use for research/exploration
 2. **Broken agent = STOP** - Do NOT skip to next agent, wait for fix
 3. **No skipping stages** - Always follow workflow order
-4. **Memory files** - Architect writes to DECISIONS.md, Planner to RUN_CONTEXT.md, Coder does NOT write to memory
+4. **Memory files** - Architect writes to DECISIONS.md, Planner to RUN_CONTEXT.md, Coder does NOT write to DECISIONS.md
 
 ### If Agent Fails
 - Report the error to user

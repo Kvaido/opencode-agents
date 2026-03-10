@@ -2,6 +2,8 @@
 
 (This file is updated by Orchestrator during execution of one big task)
 
+---
+
 ## Current Task
 (to be filled automatically)
 

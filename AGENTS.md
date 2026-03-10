@@ -15,7 +15,6 @@ We simulate a realistic small development team:
 - **reviewer** — checks code quality and architectural fit
 - **tester** — adds / fixes tests
 - **security** — looks for vulnerabilities
-- **refactor** — improves readability and structure
 - **docs** — maintains documentation
 - **orchestrator** — coordinates the process and decides execution order
 
@@ -57,13 +56,10 @@ project-root/
 Typical sequences:
 
 - New feature / large change  
-  → architect → planner → coder → reviewer → tester → security → (refactor) → docs
+  → architect → planner → coder → reviewer → tester → security → docs
 
 - Bug fix  
   → planner → coder → tester → reviewer → security → docs
-
-- Refactoring / code improvement  
-  → planner → coder → refactor → reviewer → tester → docs
 
 - Documentation / ADR only  
   → docs → (reviewer optional)
