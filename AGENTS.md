@@ -9,6 +9,9 @@ Configuration last updated: March 2026
 
 We simulate a realistic small development team:
 
+You are Orchestrator — the coordinator of the entire agent team.
+
+- **orchestrator** — coordinates the process and decides execution order
 - **architect** — ensures long-term structural sustainability
 - **planner** — breaks tasks into clear, understandable steps
 - **coder** — writes and modifies code
@@ -16,11 +19,30 @@ We simulate a realistic small development team:
 - **tester** — adds / fixes tests
 - **security** — looks for vulnerabilities
 - **docs** — maintains documentation
-- **orchestrator** — coordinates the process and decides execution order
 
-### Most Important General Rules (mandatory for **ALL** agents)
+### Agents directory Structure
 
-1. Strictly follow the rules and constraints described in the **PROJECT CONTEXT** block of the current repository
+project-root/
+├── src/ or app/ or lib/        # main application code
+├── tests/ or __tests__/        # tests
+├── docs/ or architecture/      # architectural decisions, ADRs, diagrams
+└── .opencode/                  # agent configuration
+    ├── agents/                 # agent configurations
+    │   ├── orchestrator.md     # orchestrator agent
+    │   ├── planner.md         # planner agent
+    │   ├── architect.md       # architect agent
+    │   ├── coder.md           # coder agent
+    │   ├── reviewer.md        # reviewer agent
+    │   ├── tester.md          # tester agent
+    │   ├── security.md        # security agent
+    │   └── docs.md            # docs agent
+    └── workflows/              # workflow templates
+        └── feature-development.md
+
+
+### Critical Rules (mandatory for **ALL** agents)
+
+1. Strictly follow the rules and constraints described in **PROJECT_CONTEXT.md** (the PROJECT CONTEXT block)
 2. Code is written **for humans**, not just for machines. In 3–12 months another person (or yourself) should be able to quickly understand:
    - why this code exists
    - which important business rules / invariants / constraints are covered
@@ -42,14 +64,10 @@ We simulate a realistic small development team:
 6. Maximum file size ~400–450 lines (except tests / generated code / data files)
 7. Do **not** add new dependencies without explicit approval from architect / orchestrator
 8. **Never** trust input data coming from clients / external sources
-
-### Directory Structure (general recommendation — adapted in PROJECT CONTEXT)
-
-project-root/
-├── src/ or app/ or lib/        # main application code
-├── tests/ or __tests__/        # tests
-├── docs/ or architecture/      # architectural decisions, ADRs, diagrams
-└── .opencode/                  # agent configuration
+9. **General agent is NOT ALLOWED for development** - Only use for research/exploration
+10. **Broken agent = STOP** - Do NOT skip to next agent, wait for fix
+11. **No skipping stages** - Always follow workflow order
+12. **Memory files** - Architect writes to DECISIONS.md, Planner to RUN_CONTEXT.md, Coder does NOT write to DECISIONS.md
 
 ## GENERAL WORKFLOW (controlled by the orchestrator)
 
@@ -69,59 +87,52 @@ Typical sequences:
 
 The orchestrator may change order, add iterations, or introduce parallel steps when needed.
 
-## PROJECT CONTEXT — MODIFIABLE BLOCK (change only this part for each specific project)
+### Iterative Workflow (EXTENDS GENERAL WORKFLOW)
+Orchestrator controls the process after each agent:
+```
+1. Agent does the work
+2. Orchestrator checks results:
+   ✓ No issues → next agent
+   ✗ Has issues → return to Coder for fixes
+3. Coder fixes → returns to Agent for re-check
+4. Repeat until all agents approve
+```
 
-### Current Stack and Key Technologies
+#### Iteration Rules:
+- **Reviewer** → found issues → Coder fixes → Reviewer checks again
+- **Tester** → found bugs → Coder fixes → Tester checks again
+- **Security** → found vulnerabilities → Coder fixes → Security checks again
+- Only after all agents approve → move to next
 
-- Language(s): ___________________________
-- Backend framework / runtime: _______
-- Frontend (if any): ______________________
-- Database / storage: ____________________
-- Main libraries / tools: ________________
-- Authentication: ________________________
-- Testing: _______________________________
-- Code style / linter / formatter: _______
-- Package manager: ______________________
-- CI/CD / deployment: ___________________
+### Feedback Loop (MANDATORY)
+When Agent finds issues → follow Iteration Rules above. Write feedback to RUN_CONTEXT.md.
 
-### Architecture and Key Principles (5–10 most important rules)
-
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
-...
-
-### Recommended Directory Structure (current as of now)
-
-src/
-├── features/ or modules/ or domains/
-├── shared/ or lib/ or common/
-├── ...
-
-### Critical Prohibitions and Anti-patterns
-
-- Never ...
-- Forbidden to ...
-- Access to ... is allowed only in ...
-- Must not import ... into ...
-
-### Additional Style, Patterns, and Error Handling Preferences
-
-- Naming conventions: ...
-- Error handling: ...
-- Tests: ...
-- Comments / documentation: ...
+### Coder Decision Log (MANDATORY)
+- **File**: `docs/CODER_DECISIONS.md`
+- **When**: Coder records decisions IMMEDIATELY when made, not at the end
+- **Who Reads**: All agents BEFORE starting work (must read AGENTS.md, PROJECT_CONTEXT.md, DECISIONS.md, RUN_CONTEXT.md)
+- **Purpose**: Transparency of thinking for other agents
+- **What to record**:
+  - Rejected approaches and why
+  - Workarounds and their limitations
+  - Technical trade-offs
+  - Lessons learned ("gotchas")
+  - Fixes based on Tester/Security/Reviewer feedback
+- **Format**: Date + Author + Context + Decision + Outcome + Reasoning
 
 ---
 
 ## Memory and Context
 
-- All agents must read **DECISIONS.md** and **RUN_CONTEXT.md** files
-- **DECISIONS.md** — permanent project decisions (created by Architect, updated by Orchestrator)
-- **RUN_CONTEXT.md** — current task context (managed by Orchestrator)
-- Decisions in DECISIONS.md take priority over everything else
+All agents must read these files before starting work:
+
+| File | Purpose |
+|------|---------|
+| **AGENTS.md** | Universal rules, workflow, agent responsibilities |
+| **PROJECT_CONTEXT.md** | Project-specific context (stack, principles, structure) — FILLED BEFORE EACH PROJECT |
+| **DECISIONS.md** | Project-specific architectural decisions |
+| **RUN_CONTEXT.md** | Current task progress and context (managed by Orchestrator) |
+
+**Priority**: AGENTS.md → PROJECT_CONTEXT.md → DECISIONS.md → RUN_CONTEXT.md
 
 These files help maintain consistency across task sessions and prevent conflicting decisions.

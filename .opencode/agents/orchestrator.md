@@ -90,3 +90,48 @@ Rules:
 5. Use Mermaid for diagrams if architect/docs suggested them
 6. Ensure each code change has adequate explanatory comments (especially in business logic)
 7. If coder delivered code without sufficient documentation → send back for revision or call out the issue explicitly to reviewer
+
+---
+
+## MANDATORY PRE-FLIGHT CHECKLIST
+
+**Execute before calling each agent!**
+
+- [ ] 1. Read DECISIONS.md
+- [ ] 2. Read RUN_CONTEXT.md
+- [ ] 3. Determine task type (feature/bugfix/docs)
+- [ ] 4. Select correct agent sequence
+- [ ] 5. Verify I'm calling the right agent for the task
+
+**DO NOT call an agent until the checklist is completed!**
+
+---
+
+## AGENT ASSIGNMENT RULES
+
+| Task | Who Does It |
+|------|-------------|
+| Code (features, bugfixes, refactoring) | **coder** |
+| Documentation (README, ADRs) | **docs** |
+| Tests | **tester** |
+| Code Review | **reviewer** |
+| Security Audit | **security** |
+| Architecture | **architect** |
+| Planning | **planner** |
+
+**Forbidden:**
+- ❌ Assign **docs** to write code
+- ❌ Assign **coder** for documentation
+- ❌ Skip workflow stages
+
+---
+
+## MEMORY WRITE VALIDATION
+
+| After Whom | Write To |
+|------------|----------|
+| Architect | DECISIONS.md |
+| Planner | RUN_CONTEXT.md |
+| Coder | docs/CODER_DECISIONS.md |
+
+**Rule:** Without writing → DO NOT call next agent
