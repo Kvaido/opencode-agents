@@ -105,7 +105,7 @@ Orchestrator controls the process after each agent:
 - Only after all agents approve → move to next
 
 ### Feedback Loop (MANDATORY)
-When Agent finds issues → follow Iteration Rules above. Write feedback to RUN_CONTEXT.md.
+When Agent finds issues → follow Iteration Rules above. Report feedback to Orchestrator, who instructs Planner to update RUN_CONTEXT.md.
 
 ### Coder Decision Log (MANDATORY)
 - **File**: `docs/CODER_DECISIONS.md`
@@ -131,7 +131,7 @@ All agents must read these files before starting work:
 | **AGENTS.md** | Universal rules, workflow, agent responsibilities |
 | **PROJECT_CONTEXT.md** | Project-specific context (stack, principles, structure) — FILLED BEFORE EACH PROJECT |
 | **DECISIONS.md** | Project-specific architectural decisions |
-| **RUN_CONTEXT.md** | Current task progress and context (managed by Orchestrator) |
+| **RUN_CONTEXT.md** | Current task progress and context (managed by Planner, verified by Orchestrator) |
 
 **Priority**: AGENTS.md → PROJECT_CONTEXT.md → DECISIONS.md → RUN_CONTEXT.md
 

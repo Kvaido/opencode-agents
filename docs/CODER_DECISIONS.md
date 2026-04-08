@@ -16,7 +16,7 @@ Each entry should include:
 - Date
 - Author (who wrote this entry - agent name)
 - Context (what problem was being solved)
-- Decision/Approach tried
+- Decision/Approach tried (or Trade-off)
 - Outcome (success/failure)
 - Reasoning
 

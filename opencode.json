@@ -1,90 +1,134 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "default_agent": "orchestrator",
-  "init_files": [
-    "AGENTS.md",
-    "DECISIONS.md",
-    "RUN_CONTEXT.md"
-  ],
+  "model": "opencode-go/minimax-m2.5",
+
+  "permission": {
+    "bash": {
+      "git push": "deny",
+      "git push *": "deny"
+    }
+  },
+
   "agent": {
     "orchestrator": {
       "description": "Main coordinator of the agent team",
       "mode": "primary",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "task": {
+          "*": "allow"
+        },
+        "webfetch": "allow",
+        "websearch": "allow",
+        "question": "allow",
+        "skill": "allow"
       }
     },
     "planner": {
       "description": "Creates detailed, incremental implementation plans",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": true,
-        "edit": false,
-        "bash": false
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "deny",
+          "git status *": "allow",
+          "git diff *": "allow",
+          "git log *": "allow"
+        },
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": "allow"
       }
     },
     "architect": {
       "description": "Evaluates architecture impact and module boundaries",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": true,
-        "edit": false,
-        "bash": false
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "deny",
+          "git status *": "allow",
+          "git diff *": "allow",
+          "git log *": "allow"
+        },
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": "allow"
       }
     },
     "coder": {
       "description": "Implements features, fixes and refactors code",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "allow",
+          "rm *": "deny",
+          "rm -rf *": "deny",
+          "git push": "deny",
+          "git push *": "deny"
+        },
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": "allow"
       }
     },
     "reviewer": {
       "description": "Performs strict code review",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "deny",
+          "git status *": "allow",
+          "git diff *": "allow",
+          "git log *": "allow"
+        },
+        "webfetch": "allow",
+        "skill": "allow"
       }
     },
     "tester": {
       "description": "Writes and fixes unit/integration tests",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "*": "allow",
+          "rm *": "deny",
+          "rm -rf *": "deny",
+          "git push": "deny",
+          "git push *": "deny"
+        },
+        "webfetch": "allow",
+        "skill": "allow"
       }
     },
     "security": {
       "description": "Scans for security vulnerabilities",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": false,
-        "edit": false,
-        "bash": false
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "deny",
+          "git log *": "allow",
+          "git diff *": "allow"
+        },
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": "allow"
       }
     },
     "docs": {
       "description": "Creates and maintains documentation",
       "mode": "subagent",
-      "model": "opencode-go/minimax-m2.5",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": false
+      "permission": {
+        "edit": "allow",
+        "bash": "deny",
+        "webfetch": "allow",
+        "skill": "allow"
       }
     }
   }

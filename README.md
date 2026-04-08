@@ -1,264 +1,234 @@
-# OpenCode Multi-Agent System Template
+# OpenCode Multi-Agent System
 
-A comprehensive template for setting up an OpenCode multi-agent development team. This template provides a structured approach to coordinating multiple AI agents for software development tasks, with clear roles, workflows, and best practices.
+A comprehensive template for setting up an OpenCode multi-agent development team. Structured workflows, clear roles, and best practices for coordinated AI-assisted development.
 
-## Introduction
+## How It Works
 
-This project serves as a **template** for implementing the OpenCode Multi-Agent System. It provides the foundational configuration and agent definitions that teams can customize for their specific project needs.
-
-The system simulates a realistic small development team with specialized agents, each having distinct responsibilities:
-
-- **Orchestrator** — coordinates the process and decides execution order
-- **Architect** — ensures long-term structural sustainability
-- **Planner** — breaks tasks into clear, understandable steps
-- **Coder** — writes and modifies code
-- **Reviewer** — checks code quality and architectural fit
-- **Tester** — adds and fixes tests
-- **Security** — looks for vulnerabilities
-- **Docs** — maintains documentation
-
-The orchestrator acts as the team lead, analyzing user requests and delegating tasks to the appropriate agents in the correct sequence.
-
-## Quick Start
-
-To start using this template for your project:
-
-1. **Clone or copy** this template repository to your local machine
-2. **Customize AGENTS.md** — Fill in the PROJECT CONTEXT block (lines 78-120) with your specific project details
-3. **Configure agents** — Review and modify agent definitions in `.opencode/agents/` as needed
-4. **Set up your project** — Insert the technical requirements of your project into project.md
-5. **Run OpenCode** — Start developing your project by specifying OpenCode by reading project.md and the beginning of programming
-
-No additional installation is required beyond having OpenCode properly installed. The agent configuration is automatically loaded from the `.opencode/` directory.
-
-## PROJECT CONTEXT Explanation
-
-The PROJECT CONTEXT block (lines 78-120 in AGENTS.md) is the most important section to customize for your specific project. It provides all agents with essential context about your technology stack, architecture, and coding standards.
-
-### Current Stack and Key Technologies
-
-This section defines the technology stack used in your project. Each field should be filled with your specific technology choices:
-
-- **Language(s)** — The primary programming languages used (e.g., TypeScript, Python, Go, Rust)
-- **Backend framework / runtime** — The web framework or server runtime (e.g., Express, Fastify, Django, Next.js, Node.js)
-- **Frontend** — The UI framework if applicable (e.g., React, Vue, Svelte, Next.js)
-- **Database / storage** — The database system used (e.g., PostgreSQL, MongoDB, MySQL, Redis)
-- **Main libraries / tools** — Key dependencies and tools (e.g., tRPC, Prisma, Tailwind CSS)
-- **Authentication** — The authentication solution (e.g., next-auth, Clerk, Lucia, JWT, OAuth)
-- **Testing** — Test frameworks used (e.g., Jest, Vitest, Playwright, Cypress)
-- **Code style / linter / formatter** — Linting and formatting tools (e.g., ESLint, Prettier, Ruff, black)
-- **Package manager** — The package manager used (e.g., npm, pnpm, yarn, bun)
-- **CI/CD / deployment** — Deployment platform and CI/CD pipeline (e.g., GitHub Actions, GitLab CI, Vercel, Docker)
-
-**Example:**
-
-```markdown
-- Language(s): TypeScript, Python
-- Backend framework / runtime: Fastify, Node.js
-- Frontend: React, Next.js
-- Database / storage: PostgreSQL, Redis
-- Main libraries / tools: tRPC, Prisma, Tailwind CSS, Zod
-- Authentication: next-auth
-- Testing: Vitest, Playwright
-- Code style / linter / formatter: ESLint, Prettier
-- Package manager: pnpm
-- CI/CD / deployment: GitHub Actions, Vercel
-```
-
-## Workflow
+The system simulates a small development team with specialized agents. The **Orchestrator** coordinates the process — it analyzes requests, decides which agent to invoke next, verifies results, and ensures quality at each step.
 
 ```mermaid
 graph TD
-    User[User / project.md] --> Orchestrator
+    User[User Request] --> Orchestrator
+
+    Orchestrator -->|Architecture needed?| Architect
+    Architect -->|writes DECISIONS.md| Orchestrator
+    Orchestrator -->|verifies| Planner
+    Planner -->|writes RUN_CONTEXT.md| Orchestrator
     
-    Orchestrator --> Architect
-    Architect -->|DECISIONS.md| Planner
+    Orchestrator --> Coder
+    Coder -->|writes CODE + CODER_DECISIONS.md| Orchestrator
+    Orchestrator --> Reviewer
     
-    Planner -->|RUN_CONTEXT.md| Coder
-    Coder -->|CODE| Reviewer
+    Reviewer -->|APPROVE| Orchestrator
+    Reviewer -->|REQUEST_CHANGES| Coder
     
-    Reviewer -->|OK| Tester
-    Reviewer -->|Issues| Coder
+    Orchestrator --> Tester
+    Tester -->|All passing| Orchestrator
+    Tester -->|Failures| Coder
     
-    Tester --> Security
-    Security -->|Vulnerabilities| Coder
+    Orchestrator -->|parallel if reviewer APPROVED| Security
+    Security -->|No vulns| Orchestrator
+    Security -->|Critical/High| Coder
     
-    Security --> Docs
-    
+    Orchestrator --> Docs
     Docs --> Orchestrator
-    
-    Orchestrator -->|New Cycle| User
+    Orchestrator --> User
 ```
 
-### Workflow Types
+## Quick Start
 
-| Task Type | Workflow |
-|-----------|----------|
-| New Feature | architect → planner → coder → reviewer → tester → security → docs |
-| Bugfix | planner → coder → tester → reviewer → security → docs |
+1. **Clone** this repository to your project
+2. **Fill PROJECT_CONTEXT.md** — your tech stack, architecture rules, prohibitions
+3. **Run OpenCode** — the orchestrator agent starts automatically
 
-### Memory Files
+No additional installation needed. Agent configs load from `.opencode/` directory.
 
-- **DECISIONS.md** - Permanent architectural decisions
-- **RUN_CONTEXT.md** - Current task context
-- **CODER_DECISIONS.md** - Technical decisions and workarounds
+## Agents
 
-See `docs/examples/` for workflow examples.
+| Agent | Role | Writes to | Permissions |
+|-------|------|-----------|-------------|
+| **Orchestrator** | Coordinates workflow, verifies results | — (verifies only) | Reads everything, delegates tasks, asks user questions |
+| **Architect** | Architecture decisions, module boundaries | `DECISIONS.md` | Edit files, read git, web search |
+| **Planner** | Step-by-step implementation plans | `RUN_CONTEXT.md` | Edit files, read git, web search |
+| **Coder** | Implements features, fixes bugs | `CODER_DECISIONS.md` + code | Full edit + bash (no `rm`, no `git push`), web search |
+| **Reviewer** | Code quality review | — (verdict only) | Read-only, web fetch for standards |
+| **Tester** | Writes and fixes tests | — | Full edit + bash (no `rm`, no `git push`), web fetch |
+| **Security** | Vulnerability scanning | — (report only) | Read-only, web search for CVEs |
+| **Docs** | Documentation, CHANGELOG, JSDoc | — | Edit files, web fetch |
 
+### Key Design Principles
 
-### Architecture and Key Principles
+- **Orchestrator never writes** — it verifies that agents wrote to memory files
+- **Each agent reads project memory** before work: `DECISIONS.md`, `RUN_CONTEXT.md`, `CODER_DECISIONS.md`
+- **Every agent has Output Format** — structured responses so Orchestrator can route correctly
+- **`git push` is user-only** — no agent can push to remote
+- **Least privilege** — each agent only has permissions it needs
 
-This section contains 5-10 critical rules that all agents must follow when working on your project. These principles guide architectural decisions and ensure consistency across the codebase.
+## Memory System
 
-Each rule should be a concise statement that defines a key architectural principle or constraint:
+Three-level memory ensures consistency across sessions:
 
-```markdown
-1. Business logic must be in server/ modules only
-2. All API endpoints must use tRPC procedures in features/*/server/
-3. Components must be in features/*/components/
-4. Shared utilities must be in lib/ directory
-5. All data validation must use Zod schemas
-6. Database access must go through Prisma client only
-```
+| File | Who Writes | What's Inside |
+|------|-----------|---------------|
+| `DECISIONS.md` | Architect | Permanent architectural decisions (priority override) |
+| `RUN_CONTEXT.md` | Planner | Current task context, plan, progress |
+| `docs/CODER_DECISIONS.md` | Coder | Technical decisions, rejected approaches, workarounds |
 
-These rules help agents understand the project structure and make consistent decisions without needing constant guidance.
+**Priority:** `AGENTS.md` → `PROJECT_CONTEXT.md` → `DECISIONS.md` → `RUN_CONTEXT.md`
 
-### Recommended Directory Structure
-
-This section defines the suggested folder organization for your project. The structure should reflect your architecture principles and make it easy to locate code.
-
-```markdown
-src/
-├── features/ or modules/ or domains/  # Feature-specific code
-├── shared/ or lib/ or common/          # Shared utilities and libraries
-├── server/                             # Server-side business logic
-├── components/                        # Reusable UI components
-├── ...
-```
-
-**Example for a typical project:**
-
-```markdown
-src/
-├── features/
-│   ├── auth/
-│   │   ├── components/
-│   │   ├── server/
-│   │   └── index.ts
-│   ├── users/
-│   └── posts/
-├── lib/
-│   ├── db.ts
-│   └── utils.ts
-├── server/
-│   └── router.ts
-└── app/
-```
-
-This organization keeps related code together and separates concerns effectively.
-
-### Critical Prohibitions and Anti-patterns
-
-This section explicitly lists restrictions and anti-patterns that agents must avoid. These are hard rules that should never be violated:
-
-```markdown
-- Never store secrets in code (use environment variables)
-- Forbidden to commit directly to main branch
-- Access to database must be allowed only through Prisma client
-- Must not import server/ code into client components
-- Never skip input validation on API endpoints
-```
-
-Defining these prohibitions helps prevent common mistakes and security vulnerabilities.
-
-### Additional Style, Patterns, and Error Handling Preferences
-
-This section provides detailed guidance on coding conventions and patterns:
-
-- **Naming conventions** — Defines the case style for different code elements (e.g., camelCase for variables, PascalCase for classes, snake_case for database tables)
-- **Error handling** — Specifies how errors should be managed (e.g., try-catch blocks, Result types, error boundaries)
-- **Tests** — Defines test naming patterns and coverage requirements (e.g., tests should be named `shouldXWhenY`)
-- **Comments / documentation** — Specifies JSDoc requirements and when comments are required
-
-**Example:**
-
-```markdown
-- Naming conventions: camelCase (variables), PascalCase (components), snake_case (database)
-- Error handling: Use Result types for recoverable errors, throw for critical failures
-- Tests: Name format shouldXWhenY (e.g., shouldReturnUserWhenIdExists)
-- Comments: JSDoc required for all public functions, explain WHY not WHAT
-```
-
-## Agent Files
-
-Each agent is defined in `.opencode/agents/` with specific responsibilities and rules. Here's a brief description of each:
-
-### architect.md
-
-Evaluates task impact on project architecture, defines module boundaries and dependencies, suggests patterns for complex tasks, and analyzes existing structure. Does not write code—only makes architectural decisions.
-
-### planner.md
-
-Analyzes task requirements, creates step-by-step implementation plans, determines execution order, and identifies dependencies between tasks. Produces plans without writing code.
-
-### coder.md
-
-Implements features and fixes bugs following project architecture and conventions. Writes clean, maintainable code with appropriate comments explaining complex logic, workarounds, and important assumptions.
-
-### reviewer.md
-
-Checks code against standards, finds potential issues, and suggests improvements. Does not modify code directly but identifies problems and suggests specific fixes. Ensures adequate documentation and comments exist.
-
-### tester.md
-
-Writes unit and integration tests, fixes existing tests, and checks code test coverage. Names tests using the `shouldXWhenY` pattern and tests critical scenarios.
-
-### security.md
-
-Scans for vulnerabilities, checks input data security, analyzes authentication and authorization, and ensures protection against common vulnerabilities (SQL injection, XSS, CSRF). Ensures secrets are never stored in code.
-
-### docs.md
-
-Writes and updates JSDoc for public functions, types, and tRPC procedures. Creates README files for features, writes Architectural Decision Records (ADRs), generates Mermaid diagrams, and maintains CHANGELOG.md.
-
-### orchestrator.md
-
-Coordinates the entire agent team. Analyzes user requests, determines task type, delegates to sub-agents in logical sequence, and handles results. Ensures proper workflow execution and final reporting to the user.
+All agents read these files before starting work. If an agent violates a decision — Orchestrator sends it back.
 
 ## Workflows
 
-The orchestrator manages different workflows based on the type of task:
+| Task Type | Workflow | When Architect? |
+|-----------|----------|-----------------|
+| New Feature | architect → planner → coder → reviewer → tester → security → docs | ✅ Always |
+| Bug Fix | planner → coder → tester → reviewer → security → docs | ❌ Skip |
+| Documentation | docs → reviewer (optional) | ❌ Skip |
+| Architecture Discussion | architect → docs | ✅ Always |
 
-### New Feature / Major Change
+### Iterative Loop
 
-```
-architect → planner → coder → reviewer → tester → security → docs
-```
-
-Used for implementing significant new functionality that requires architectural planning.
-
-### Bug Fix
-
-```
-planner → coder → tester → reviewer → security → docs
-```
-
-Used for fixing bugs, typically starting with planning the fix, implementing it, testing, and reviewing.
-
-### Documentation Only / ADR
+When an agent finds issues, it doesn't proceed to the next step:
 
 ```
-docs → reviewer (optional)
+Reviewer → issues → Coder fixes → Reviewer checks again
+Tester → failures → Coder fixes → Tester checks again  
+Security → vulnerabilities → Coder fixes → Security checks again
 ```
 
-Used for documentation updates or creating Architectural Decision Records.
+Maximum 3 retries per agent per issue, then escalation to Orchestrator.
 
-### Architecture Discussion / Design
+### Parallel Execution
+
+Reviewer and Security can run **in parallel** — but only if Reviewer has **APPROVED** the code. If Reviewer requests changes, Security must wait.
+
+## Permissions (opencode.json)
+
+Agent permissions follow least-privilege principle:
+
+| Agent | edit | bash | task | webfetch | websearch | question | skill |
+|-------|------|------|------|----------|-----------|----------|-------|
+| orchestrator | deny | deny | ✅ all | ✅ | ✅ | ✅ | ✅ |
+| planner | ✅ | git read only | — | ✅ | ✅ | — | ✅ |
+| architect | ✅ | git read only | — | ✅ | ✅ | — | ✅ |
+| coder | ✅ | ✅ (no rm, no push) | — | ✅ | ✅ | — | ✅ |
+| reviewer | deny | git read only | — | ✅ | — | — | ✅ |
+| tester | ✅ | ✅ (no rm, no push) | — | ✅ | — | — | ✅ |
+| security | deny | git read only | — | ✅ | ✅ | — | ✅ |
+| docs | ✅ | deny | — | ✅ | — | — | ✅ |
+
+Global rules:
+- `git push` is **denied for all agents** — only the user can push
+- `rm` and `rm -rf` are denied for coder and tester
+- Only Orchestrator can invoke subagents via `task`
+
+## Project Structure
 
 ```
-architect → (planner optional) → docs
+project-root/
+├── AGENTS.md                    # Universal rules and workflow (don't modify casually)
+├── PROJECT_CONTEXT.md           # YOUR PROJECT — fill this first!
+├── DECISIONS.md                 # Permanent architectural decisions
+├── RUN_CONTEXT.md               # Current task context
+├── opencode.json                # Agent permissions and models
+├── docs/
+│   ├── CODER_DECISIONS.md       # Technical decisions and workarounds
+│   └── README.md                # This documentation
+└── .opencode/
+    ├── agents/
+    │   ├── orchestrator.md       # Team coordinator
+    │   ├── architect.md          # Architecture expert
+    │   ├── planner.md            # Implementation planner
+    │   ├── coder.md              # Code implementer
+    │   ├── reviewer.md           # Code quality reviewer
+    │   ├── tester.md             # Test specialist
+    │   ├── security.md           # Security scanner
+    │   └── docs.md               # Documentation writer
+    └── workflows/
+        └── feature-development.md
 ```
 
-Used for discussing architectural decisions or design patterns before implementation.
+## Configuration
 
-The orchestrator may modify these workflows based on task complexity, adding iterations or parallel steps as needed.
+### Before Using
+
+1. **Fill `PROJECT_CONTEXT.md`** — your tech stack, architecture principles, prohibitions, and directory structure
+2. **Review `opencode.json`** — check model and permissions
+3. **Review agent prompts** in `.opencode/agents/` — customize if needed
+
+### Model Selection
+
+Model is configured globally in `opencode.json`. All agents inherit this model automatically:
+
+```json
+{
+  "model": "opencode-go/minimax-m2.5"
+}
+```
+
+Change the model to any provider supported by OpenCode:
+
+```json
+{
+  "model": "anthropic/claude-sonnet-4-20250514"
+}
+```
+
+To override the model for a specific agent (e.g., use a faster model for reviewer), add `model` to that agent's config:
+
+```json
+{
+  "agent": {
+    "reviewer": {
+      "model": "anthropic/claude-haiku-4-20250514"
+    }
+  }
+}
+```
+
+Model recommendations:
+- Orchestrator needs a strong model for coordination and routing
+- Coder/Tester need strong models for code generation
+- Reviewer/Security can use faster models for analysis
+- Docs can use a balanced model
+
+### Adding Skills
+
+Skills are local instruction files that agents load on-demand:
+
+```
+.opencode/skills/<skill-name>/SKILL.md
+```
+
+Create a skill:
+
+```markdown
+---
+name: git-release
+description: Create consistent releases and changelogs
+---
+
+## What I do
+- Draft release notes from merged PRs
+- Propose a version bump
+
+## When to use me
+Use this when preparing a tagged release.
+```
+
+Agents see available skills and load them when relevant.
+
+## Status Primitives
+
+The 5 Laws of Code (enforced by Coder and Reviewer):
+
+1. **Early Exit** — Guard clauses at function top, shallow nesting
+2. **Parse, Don't Validate** — Parse once at boundaries, trust internally
+3. **Atomic Predictability** — Pure functions where possible, explicit side effects
+4. **Fail Fast** — Descriptive errors, no silent failures
+5. **Intentional Naming** — Code reads like English, no cryptic abbreviations
+
+## License
+
+MIT

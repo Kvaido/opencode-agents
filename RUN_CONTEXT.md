@@ -1,6 +1,6 @@
 # RUN CONTEXT — Important Facts and Decisions for Current Task
 
-(This file is updated by Orchestrator during execution of one big task)
+(This file is updated by Planner during execution of one big task, verified by Orchestrator)
 
 ---
 
