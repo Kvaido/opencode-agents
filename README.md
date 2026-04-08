@@ -7,32 +7,53 @@ A comprehensive template for setting up an OpenCode multi-agent development team
 The system simulates a small development team with specialized agents. The **Orchestrator** coordinates the process — it analyzes requests, decides which agent to invoke next, verifies results, and ensures quality at each step.
 
 ```mermaid
-graph TD
-    User[User Request] --> Orchestrator
+flowchart TD
+    Start([User Request]) --> Orchestrator
 
-    Orchestrator -->|Architecture needed?| Architect
-    Architect -->|writes DECISIONS.md| Orchestrator
-    Orchestrator -->|verifies| Planner
-    Planner -->|writes RUN_CONTEXT.md| Orchestrator
-    
-    Orchestrator --> Coder
-    Coder -->|writes CODE + CODER_DECISIONS.md| Orchestrator
+    Orchestrator --> TaskType{Task type?}
+
+    TaskType -->|"New Feature"| Architect
+    TaskType -->|"Bug Fix"| Planner
+
+    Architect --> Orchestrator
+    Orchestrator --> VerifyArch{"DECISIONS.md updated?"}
+    VerifyArch -->|"Yes"| Planner
+    VerifyArch -->|"No"| Architect
+
+    Planner --> Orchestrator
+    Orchestrator --> VerifyPlan{"RUN_CONTEXT.md updated?"}
+    VerifyPlan -->|"Yes"| Coder
+    VerifyPlan -->|"No"| Planner
+
+    Coder --> Orchestrator
     Orchestrator --> Reviewer
-    
-    Reviewer -->|APPROVE| Orchestrator
-    Reviewer -->|REQUEST_CHANGES| Coder
-    
-    Orchestrator --> Tester
-    Tester -->|All passing| Orchestrator
-    Tester -->|Failures| Coder
-    
-    Orchestrator -->|parallel if reviewer APPROVED| Security
-    Security -->|No vulns| Orchestrator
-    Security -->|Critical/High| Coder
-    
-    Orchestrator --> Docs
+
+    Reviewer --> Orchestrator
+    Orchestrator --> ReviewVerdict{"Reviewer verdict?"}
+    ReviewVerdict -->|"APPROVE"| Tester
+    ReviewVerdict -->|"REQUEST_CHANGES"| Coder
+
+    Tester --> Orchestrator
+    Orchestrator --> TestVerdict{"All tests pass?"}
+    TestVerdict -->|"Yes"| Security
+    TestVerdict -->|"No"| Coder
+
+    Security --> Orchestrator
+    Orchestrator --> SecVerdict{"Vulnerabilities?"}
+    SecVerdict -->|"None / Low"| Docs
+    SecVerdict -->|"Critical / High"| Coder
+
     Docs --> Orchestrator
-    Orchestrator --> User
+    Orchestrator --> Done([Done ✓])
+
+    style Start fill:#4CAF50,color:#fff
+    style Done fill:#4CAF50,color:#fff
+    style TaskType fill:#2196F3,color:#fff
+    style VerifyArch fill:#FF9800,color:#fff
+    style VerifyPlan fill:#FF9800,color:#fff
+    style ReviewVerdict fill:#FF9800,color:#fff
+    style TestVerdict fill:#FF9800,color:#fff
+    style SecVerdict fill:#FF9800,color:#fff
 ```
 
 ## Quick Start
